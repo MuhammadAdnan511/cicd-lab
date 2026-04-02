@@ -1,9 +1,7 @@
 import os
 
-API_KEY = "12345-SECRET-KEY"   # ❌ hardcoded secret
+API_KEY = os.getenv("API_KEY")  # ✅ secure
 
 def login(password):
-    if password == "admin123":   # ❌ weak auth
+    if password == os.getenv("ADMIN_PASS"):
         print("Logged in")
-
-eval("print('Dangerous')")  # ❌ code injection risk
