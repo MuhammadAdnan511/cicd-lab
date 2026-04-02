@@ -1,0 +1,17 @@
+name: Insecure CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions: write-all   # ❌ excessive permissions
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install deps
+      run: pip install -r requirements.txt
+
+    - name: Run app
+      run: python app.py
