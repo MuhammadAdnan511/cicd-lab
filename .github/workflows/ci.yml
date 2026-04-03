@@ -1,17 +1,33 @@
-name: Insecure CI
+name: Secure CI
 
 on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions: write-all   # ❌ excessive permissions
+
+    permissions:
+      contents: read   # ✅ least privilege
+
+    env:
+      API_KEY: ${{ secrets.API_KEY }}
+      ADMIN_PASS: ${{ secrets.ADMIN_PASS }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
-    - name: Install deps
+    - name: Install dependencies
       run: pip install -r requirements.txt
+
+    - name: Run Bandit (SAST)
+      run: |
+        pip install bandit
+        bandit -r .
+
+    - name: Run Safety (Dependency Scan)
+      run: |
+        pip install safety
+        safety check
 
     - name: Run app
       run: python app.py
